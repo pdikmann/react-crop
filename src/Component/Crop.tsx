@@ -105,6 +105,12 @@ export default class Crop extends React.Component<ICropProps, ICropState> {
             dims.height = data.y - dims.top
             break
         }
+        nextState.cropRect = {
+          x: dims.left,
+          y: dims.top,
+          width: dims.width,
+          height: dims.height
+        }
         this.props.onChange(nextState.cropRect)
         return nextState
       })
