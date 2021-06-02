@@ -2,6 +2,13 @@ import classes from "../CSS/Crop.module.css";
 import React from "react";
 import Draggable, {DraggableData, DraggableEvent, DraggableEventHandler} from 'react-draggable'
 
+export interface CropRect {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
 interface ICropProps {
 }
 
@@ -43,7 +50,7 @@ interface ICropState {
   cropFrameDimensions: CropFrameDimensions
 }
 
-export class Crop extends React.Component<ICropProps, ICropState> {
+export default class Crop extends React.Component<ICropProps, ICropState> {
   cropFrame = React.createRef<HTMLDivElement>()
   handleRoles = [HandleRoles.TopLeft, HandleRoles.BottomRight] //[HandleRoles.TopLeft, HandleRoles.TopRight, HandleRoles.BottomRight, HandleRoles.BottomLeft]
 

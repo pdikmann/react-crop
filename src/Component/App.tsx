@@ -3,8 +3,12 @@ import '../CSS/App.css';
 import image from '../andriyko-podilnyk-RCfi7vgJjUY-unsplash.jpg'
 import {CenteringWrapper} from "./CenteringWrapper";
 import {ImageDisplay} from "./ImageDisplay";
-import {Crop} from "./Crop"
+import Crop, {CropRect} from "./Crop"
 import {SizeWrapper} from "./SizeWrapper"
+
+function cropCallback(e: CropRect){
+  console.log(e)
+}
 
 function App() {
   return (
