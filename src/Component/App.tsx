@@ -1,14 +1,17 @@
 import React from 'react';
 import '../CSS/App.css';
 import image from '../andriyko-podilnyk-RCfi7vgJjUY-unsplash.jpg'
+import '../CSS/ImageDisplay.css'
 
 interface IImageDisplay {
   src: string
   alt: string
+  width?: number
+  height?: number
 }
 
 function ImageDisplay (props: IImageDisplay){
-  return <img src={props.src} alt={props.alt} />
+  return <img className="image-display" src={props.src} alt={props.alt} />
 }
 
 function App() {

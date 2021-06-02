@@ -1,0 +1,6 @@
+img.image-display {
+    --custom-width: 50%;
+    --custom-height: 50%;
+    width: var(--custom-width);
+    height: var(--custom-height);
+}
