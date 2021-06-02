@@ -1,28 +1,21 @@
-import React from 'react';
+import React, {ReactNode} from 'react';
 import '../CSS/App.css';
 import image from '../andriyko-podilnyk-RCfi7vgJjUY-unsplash.jpg'
-import {Wrapper} from "./Wrapper";
+import {CenteringWrapper} from "./CenteringWrapper";
 import {ImageDisplay} from "./ImageDisplay";
-import classes from '../CSS/Crop.module.css'
-
-interface ICropProps {
-}
-
-function Crop(){
-  return (
-    <div className={classes.crop}>
-      <div className={classes.handle}/>
-    </div>
-  )
-}
+import {Crop} from "./Crop";
+import {SizeWrapper} from "./SizeWrapper";
 
 function App() {
+  let imgCmpRef = React.createRef<ReactNode>()
   return (
     <div className="App">
-      <Wrapper>
-        <Crop/>
-        <ImageDisplay src={image} alt={'Photo by Andriyko Podilnyk (https://unsplash.com/@yirage)'}/>
-      </Wrapper>
+      <CenteringWrapper>
+        <SizeWrapper width={'800px'} height={'600px'}>
+          <ImageDisplay src={image} alt={'Photo by Andriyko Podilnyk (https://unsplash.com/@yirage)'}/>
+          <Crop/>
+        </SizeWrapper>
+      </CenteringWrapper>
     </div>
   );
 }
