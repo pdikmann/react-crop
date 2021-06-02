@@ -26,7 +26,7 @@ function Handle(props: IHandleProps) {
   let ref = React.createRef<HTMLDivElement>()
   let label = ['tl', 'tr', 'br', 'bl'][props.role as number]
   return (
-    <Draggable nodeRef={ref} onDrag={props.dragHandler}>
+    <Draggable bounds='parent' nodeRef={ref} onDrag={props.dragHandler}>
       <div ref={ref} className={classes.handle}>{label}</div>
     </Draggable>
   )
