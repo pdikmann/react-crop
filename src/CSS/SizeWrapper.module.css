@@ -1,6 +1,4 @@
 .sizeWrapper {
-    --custom-width: 100%;
-    --custom-height: 100%;
-    width: var(--custom-width);
-    height: var(--custom-height);
+    width: 100%;
+    height: 100%;
 }
