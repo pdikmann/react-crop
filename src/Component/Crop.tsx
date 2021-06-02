@@ -76,9 +76,6 @@ export default class Crop extends React.Component<ICropProps, ICropState> {
     this.pixelDimensions = this.pixelDimensions.bind(this)
   }
 
-  componentDidMount() {
-  }
-
   pixelDimensions() {
     let dims: PixelDimensions = {top: '', left: '', width: '', height: ''}
     for (let k in this.state.cropFrameDimensions) {
@@ -115,10 +112,6 @@ export default class Crop extends React.Component<ICropProps, ICropState> {
         return nextState
       })
     }
-  }
-
-  dragHandler(e: DraggableEvent, data: DraggableData): void {
-    console.log('dragged')
   }
 
   render() {
