@@ -2,7 +2,21 @@ import classes from "../CSS/Crop.module.css";
 import React from "react";
 import Draggable, {DraggableData, DraggableEvent, DraggableEventHandler} from 'react-draggable'
 
-interface ICropProps {
+export interface CropRect {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+export type CropEventHandler = (e: CropRect) => any
+
+enum HandleRoles {
+  TopLeft,
+  TopRight,
+  BottomRight,
+  BottomLeft,
+  MAX
 }
 
 interface IHandleProps {
@@ -14,26 +28,10 @@ function Handle(props: IHandleProps) {
   let ref = React.createRef<HTMLDivElement>()
   let label = ['tl', 'tr', 'br', 'bl'][props.role as number]
   return (
-    <Draggable nodeRef={ref} onDrag={props.dragHandler}>
+    <Draggable bounds='parent' nodeRef={ref} onDrag={props.dragHandler}>
       <div ref={ref} className={classes.handle}>{label}</div>
     </Draggable>
   )
-}
-
-enum HandleRoles {
-  TopLeft,
-  TopRight,
-  BottomRight,
-  BottomLeft,
-  MAX
-}
-
-enum OverlayRoles {
-  Top,
-  Right,
-  Bottom,
-  Left,
-  MAX
 }
 
 interface CropFrameDimensions {
@@ -47,21 +45,28 @@ type PixelDimensions = {
   [key in keyof CropFrameDimensions]: string;
 };
 
+interface ICropProps {
+  onChange: CropEventHandler
+}
+
 interface ICropState {
+  cropRect: CropRect
   cropFrameDimensions: CropFrameDimensions
 }
 
-export class Crop extends React.Component<ICropProps, ICropState> {
-  // overlays: {
-  //   [OverlayRoles]: React.Ref<HTMLDivElement>
-  // }
-  overlayRoles = [OverlayRoles.Left]
+export default class Crop extends React.Component<ICropProps, ICropState> {
   cropFrame = React.createRef<HTMLDivElement>()
   handleRoles = [HandleRoles.TopLeft, HandleRoles.BottomRight] //[HandleRoles.TopLeft, HandleRoles.TopRight, HandleRoles.BottomRight, HandleRoles.BottomLeft]
 
   constructor(props: ICropProps) {
     super(props);
     this.state = {
+      cropRect: {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0
+      },
       cropFrameDimensions: {
         top: 0,
         left: 0,
@@ -69,13 +74,8 @@ export class Crop extends React.Component<ICropProps, ICropState> {
         height: 0
       }
     }
-    // this.overlays = this.overlayRoles.map((role) => ({role, ref: React.createRef<HTMLDivElement>()}))
     this.createDragHandler = this.createDragHandler.bind(this)
     this.pixelDimensions = this.pixelDimensions.bind(this)
-  }
-
-  componentDidMount() {
-
   }
 
   pixelDimensions() {
@@ -87,7 +87,6 @@ export class Crop extends React.Component<ICropProps, ICropState> {
   }
 
   createDragHandler(role: HandleRoles) {
-    let cropFrame = this.cropFrame
     return (e: DraggableEvent, data: DraggableData) => {
       // if (role === HandleRoles.TopLeft) return false
       this.setState(prevState => {
@@ -105,28 +104,30 @@ export class Crop extends React.Component<ICropProps, ICropState> {
             dims.height = data.y - dims.top
             break
         }
+        nextState.cropRect = {
+          x: dims.left,
+          y: dims.top,
+          width: dims.width,
+          height: dims.height
+        }
+        this.props.onChange(nextState.cropRect)
         return nextState
       })
     }
   }
 
-
-  dragHandler(e: DraggableEvent, data: DraggableData): void {
-    console.log('dragged')
-  }
-
   render() {
     return (
-      <div className={classes.crop}>
-        <Draggable bounds='parent'>
-          <div ref={this.cropFrame} className={classes.cropFrame} style={this.pixelDimensions()}/>
-        </Draggable>
-        {/*{this.overlays.map(({role, ref}) => (*/}
-        {/*  <div ref={ref} className={classes.overlay}/>*/}
-        {/*))}*/}
-        {this.handleRoles.map((role: HandleRoles) => (
-          <Handle role={role} dragHandler={this.createDragHandler(role)}/>
-        ))}
+      <div className={classes.wrapper}>
+        {this.props.children}
+        <div className={classes.crop}>
+          <Draggable bounds='parent' nodeRef={this.cropFrame}>
+            <div ref={this.cropFrame} className={classes.cropFrame} style={this.pixelDimensions()}/>
+          </Draggable>
+          {this.handleRoles.map((role: HandleRoles, i: number) => (
+            <Handle key={i} role={role} dragHandler={this.createDragHandler(role)}/>
+          ))}
+        </div>
       </div>
     )
   }
