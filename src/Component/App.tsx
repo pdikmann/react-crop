@@ -6,7 +6,7 @@ import {ImageDisplay} from "./ImageDisplay";
 import Crop, {CropRect} from "./Crop"
 import {SizeWrapper} from "./SizeWrapper"
 
-function cropCallback(e: CropRect){
+function cropCallback(e: CropRect) {
   console.log(e)
 }
 
