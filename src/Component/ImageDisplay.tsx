@@ -1,5 +1,5 @@
 import React from "react";
-import '../CSS/ImageDisplay.css'
+import classes from '../CSS/ImageDisplay.module.css'
 
 interface IImageDisplayProps {
   src: string
@@ -18,6 +18,6 @@ export class ImageDisplay extends React.Component<IImageDisplayProps> {
   }
 
   render() {
-    return <img ref={this.imgRef} className="image-display" src={this.props.src} alt={this.props.alt}/>
+    return <img ref={this.imgRef} className={classes.imageDisplay} src={this.props.src} alt={this.props.alt}/>
   }
 }
