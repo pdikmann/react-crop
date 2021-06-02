@@ -28,14 +28,6 @@ enum HandleRoles {
   MAX
 }
 
-enum OverlayRoles {
-  Top,
-  Right,
-  Bottom,
-  Left,
-  MAX
-}
-
 interface CropFrameDimensions {
   top: number
   left: number
@@ -52,10 +44,6 @@ interface ICropState {
 }
 
 export class Crop extends React.Component<ICropProps, ICropState> {
-  // overlays: {
-  //   [OverlayRoles]: React.Ref<HTMLDivElement>
-  // }
-  overlayRoles = [OverlayRoles.Left]
   cropFrame = React.createRef<HTMLDivElement>()
   handleRoles = [HandleRoles.TopLeft, HandleRoles.BottomRight] //[HandleRoles.TopLeft, HandleRoles.TopRight, HandleRoles.BottomRight, HandleRoles.BottomLeft]
 
@@ -69,13 +57,11 @@ export class Crop extends React.Component<ICropProps, ICropState> {
         height: 0
       }
     }
-    // this.overlays = this.overlayRoles.map((role) => ({role, ref: React.createRef<HTMLDivElement>()}))
     this.createDragHandler = this.createDragHandler.bind(this)
     this.pixelDimensions = this.pixelDimensions.bind(this)
   }
 
   componentDidMount() {
-
   }
 
   pixelDimensions() {
@@ -87,7 +73,6 @@ export class Crop extends React.Component<ICropProps, ICropState> {
   }
 
   createDragHandler(role: HandleRoles) {
-    let cropFrame = this.cropFrame
     return (e: DraggableEvent, data: DraggableData) => {
       // if (role === HandleRoles.TopLeft) return false
       this.setState(prevState => {
@@ -110,7 +95,6 @@ export class Crop extends React.Component<ICropProps, ICropState> {
     }
   }
 
-
   dragHandler(e: DraggableEvent, data: DraggableData): void {
     console.log('dragged')
   }
@@ -121,9 +105,6 @@ export class Crop extends React.Component<ICropProps, ICropState> {
         <Draggable bounds='parent'>
           <div ref={this.cropFrame} className={classes.cropFrame} style={this.pixelDimensions()}/>
         </Draggable>
-        {/*{this.overlays.map(({role, ref}) => (*/}
-        {/*  <div ref={ref} className={classes.overlay}/>*/}
-        {/*))}*/}
         {this.handleRoles.map((role: HandleRoles) => (
           <Handle role={role} dragHandler={this.createDragHandler(role)}/>
         ))}
