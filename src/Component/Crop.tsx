@@ -9,6 +9,8 @@ export interface CropRect {
   height: number
 }
 
+export type CropEventHandler = (e: CropRect) => any
+
 enum HandleRoles {
   TopLeft,
   TopRight,
@@ -44,7 +46,7 @@ type PixelDimensions = {
 };
 
 interface ICropProps {
-  onChange: (e: CropRect) => any
+  onChange: CropEventHandler
 }
 
 interface ICropState {
