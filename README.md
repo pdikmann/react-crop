@@ -9,7 +9,7 @@ git checkout trial-day-finish
 
 # React-Crop
 
-An interface for cropping things.
+A react component for cropping things, using a nice interface.
 
 ## Usage
 
