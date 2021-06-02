@@ -101,13 +101,16 @@ export class Crop extends React.Component<ICropProps, ICropState> {
 
   render() {
     return (
-      <div className={classes.crop}>
-        <Draggable bounds='parent'>
-          <div ref={this.cropFrame} className={classes.cropFrame} style={this.pixelDimensions()}/>
-        </Draggable>
-        {this.handleRoles.map((role: HandleRoles) => (
-          <Handle role={role} dragHandler={this.createDragHandler(role)}/>
-        ))}
+      <div className={classes.wrapper}>
+        {this.props.children}
+        <div className={classes.crop}>
+          <Draggable bounds='parent'>
+            <div ref={this.cropFrame} className={classes.cropFrame} style={this.pixelDimensions()}/>
+          </Draggable>
+          {this.handleRoles.map((role: HandleRoles) => (
+            <Handle role={role} dragHandler={this.createDragHandler(role)}/>
+          ))}
+        </div>
       </div>
     )
   }

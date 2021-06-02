@@ -11,8 +11,9 @@ function App() {
     <div className="App">
       <CenteringWrapper>
         <SizeWrapper width={'400px'} height={'300px'}>
-          <ImageDisplay src={image} alt={'Photo by Andriyko Podilnyk (https://unsplash.com/@yirage)'}/>
-          <Crop/> {/*TODO envelop image*/}
+          <Crop>
+            <ImageDisplay src={image} alt={'Photo by Andriyko Podilnyk (https://unsplash.com/@yirage)'}/>
+          </Crop>
         </SizeWrapper>
       </CenteringWrapper>
     </div>
