@@ -36,45 +36,80 @@ enum OverlayRoles {
   MAX
 }
 
-type Test = 'a'
+interface CropFrameDimensions {
+  top: number
+  left: number
+  width: number
+  height: number
+}
 
+type PixelDimensions = {
+  [key in keyof CropFrameDimensions]: string;
+};
 
-export class Crop extends React.Component<ICropProps> {
+interface ICropState {
+  cropFrameDimensions: CropFrameDimensions
+}
+
+export class Crop extends React.Component<ICropProps, ICropState> {
   // overlays: {
   //   [OverlayRoles]: React.Ref<HTMLDivElement>
   // }
   overlayRoles = [OverlayRoles.Left]
   cropFrame = React.createRef<HTMLDivElement>()
   handleRoles = [HandleRoles.TopLeft, HandleRoles.BottomRight] //[HandleRoles.TopLeft, HandleRoles.TopRight, HandleRoles.BottomRight, HandleRoles.BottomLeft]
-  cropFrameDimensions : {
-    top: number
-    left: number
-    width: number
-    height: number
-  }
 
   constructor(props: ICropProps) {
     super(props);
-    this.cropFrameDimensions = {top: 0, left: 0, width: 0, height: 0}
+    this.state = {
+      cropFrameDimensions: {
+        top: 0,
+        left: 0,
+        width: 0,
+        height: 0
+      }
+    }
     // this.overlays = this.overlayRoles.map((role) => ({role, ref: React.createRef<HTMLDivElement>()}))
     this.createDragHandler = this.createDragHandler.bind(this)
+    this.pixelDimensions = this.pixelDimensions.bind(this)
+  }
+
+  componentDidMount() {
+
+  }
+
+  pixelDimensions() {
+    let dims: PixelDimensions = {top: '', left: '', width: '', height: ''}
+    for (let k in this.state.cropFrameDimensions) {
+      dims[k as keyof PixelDimensions] = `${this.state.cropFrameDimensions[k as keyof CropFrameDimensions]}px`
+    }
+    return dims as PixelDimensions
   }
 
   createDragHandler(role: HandleRoles) {
     let cropFrame = this.cropFrame
     return (e: DraggableEvent, data: DraggableData) => {
-      let cropFrame = this.cropFrame.current as HTMLDivElement;
-      switch (role) {
-        case HandleRoles.TopLeft:
-          cropFrame.style.setProperty('left', `${data.x}px`)
-          cropFrame.style.setProperty('top', `${data.y}px`)
-          break
-        case HandleRoles.BottomRight:
-
-          break
-      }
+      // if (role === HandleRoles.TopLeft) return false
+      this.setState(prevState => {
+        let nextState = {...prevState}
+        let dims = nextState.cropFrameDimensions
+        switch (role) {
+          case HandleRoles.TopLeft:
+            dims.top = data.y
+            dims.left = data.x
+            dims.width = dims.width - (data.deltaX / 2)
+            dims.height = dims.height - (data.deltaY / 2)
+            break
+          case HandleRoles.BottomRight:
+            dims.width = data.x - dims.left
+            dims.height = data.y - dims.top
+            break
+        }
+        return nextState
+      })
     }
   }
+
 
   dragHandler(e: DraggableEvent, data: DraggableData): void {
     console.log('dragged')
@@ -83,7 +118,9 @@ export class Crop extends React.Component<ICropProps> {
   render() {
     return (
       <div className={classes.crop}>
-        <div ref={this.cropFrame} className={classes.cropFrame} style={{top: '100px'}}/>
+        <Draggable bounds='parent'>
+          <div ref={this.cropFrame} className={classes.cropFrame} style={this.pixelDimensions()}/>
+        </Draggable>
         {/*{this.overlays.map(({role, ref}) => (*/}
         {/*  <div ref={ref} className={classes.overlay}/>*/}
         {/*))}*/}
