@@ -9,7 +9,12 @@ export interface CropRect {
   height: number
 }
 
-interface ICropProps {
+enum HandleRoles {
+  TopLeft,
+  TopRight,
+  BottomRight,
+  BottomLeft,
+  MAX
 }
 
 interface IHandleProps {
@@ -27,14 +32,6 @@ function Handle(props: IHandleProps) {
   )
 }
 
-enum HandleRoles {
-  TopLeft,
-  TopRight,
-  BottomRight,
-  BottomLeft,
-  MAX
-}
-
 interface CropFrameDimensions {
   top: number
   left: number
@@ -46,7 +43,12 @@ type PixelDimensions = {
   [key in keyof CropFrameDimensions]: string;
 };
 
+interface ICropProps {
+  onChange: (e: CropRect) => any
+}
+
 interface ICropState {
+  cropRect: CropRect
   cropFrameDimensions: CropFrameDimensions
 }
 
@@ -57,6 +59,12 @@ export default class Crop extends React.Component<ICropProps, ICropState> {
   constructor(props: ICropProps) {
     super(props);
     this.state = {
+      cropRect: {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0
+      },
       cropFrameDimensions: {
         top: 0,
         left: 0,
@@ -97,6 +105,7 @@ export default class Crop extends React.Component<ICropProps, ICropState> {
             dims.height = data.y - dims.top
             break
         }
+        this.props.onChange(nextState.cropRect)
         return nextState
       })
     }

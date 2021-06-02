@@ -15,7 +15,7 @@ function App() {
     <div className="App">
       <CenteringWrapper>
         <SizeWrapper width={'400px'} height={'300px'}>
-          <Crop>
+          <Crop onChange={cropCallback}>
             <ImageDisplay src={image} alt={'Photo by Andriyko Podilnyk (https://unsplash.com/@yirage)'}/>
           </Crop>
         </SizeWrapper>
